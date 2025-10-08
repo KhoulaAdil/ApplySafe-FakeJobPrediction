@@ -12,7 +12,7 @@ The project leverages the **Employment Scam Aegean Dataset (EMSCAD)** — contai
 - **Handles semantic relationships in job descriptions**
 
 **Results**
-- Test Loss: `0.0546`  
+- Test Loss: **0.05**  
 - Accuracy: **98.43%**  
 - AUC Score: **99.72%**
 
