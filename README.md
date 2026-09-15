@@ -1,65 +1,113 @@
-# ApplySafe-FakeJobPrediction
+# ApplySafe — Fake Job Prediction
 
-**ApplySafe** detects **fraudulent job postings** using both **Machine Learning** and **Deep Learning** techniques.  
-The project leverages the **Employment Scam Aegean Dataset (EMSCAD)** — containing ~18,000 job listings labeled as *real* or *fake* — and builds on NLP and neural network-based research methodologies for scam detection.
+**ApplySafe** is a machine learning and deep learning project for detecting fraudulent job postings using the **Employment Scam Aegean Dataset (EMSCAD)**.
 
-## Approaches Implemented
+The project evaluates classical machine learning models and neural-network-based approaches for binary classification of job postings as **Real** or **Fraudulent**.
 
-### 1. **Sequential Neural Network (SNN) with GloVe Embeddings**
-- Word embeddings: **GloVe (Global Vectors for Word Representation)**  
-- Architecture: Embedding → LSTM → Dense Layers  
-- Optimizer: Adam | Loss: Binary Cross-Entropy  
-- **Handles semantic relationships in job descriptions**
+## Dataset
 
-**Results**
-- Test Loss: **0.05**  
-- Accuracy: **98.43%**  
-- AUC Score: **99.72%**
+**EMSCAD (Employment Scam Aegean Dataset)**
 
----
+* **17,880** job postings
+* **17,014** real postings
+* **866** fraudulent postings
+* **18** attributes
+* Fraudulent class: **4.84%**
 
-### 2. **Traditional Machine Learning Models**
+The dataset contains job-related textual, categorical, and binary attributes, including job title, company profile, description, requirements, benefits, employment type, required experience, education, industry, and function.
 
-| Model | Accuracy | Precision | Recall | F1 Score |
-|--------|-----------|------------|----------|-----------|
-| K-Nearest Neighbors (KNN) | 95.25% | 94.50% | 95.25% | 93.38% |
-| Random Forest | 95.05% | 93.42% | 95.05% | 93.33% |
-| Support Vector Machine (SVM) | 94.94% | 90.13% | 94.94% | 92.47% |
-| Decision Tree | 94.94% | 93.10% | 94.94% | 93.30% |
-| Naive Bayes | 92.31% | 90.87% | 92.31% | 91.56% |
-| Multilayer Perceptron (MLP) | 95.11% | 95.35% | 95.11% | 92.88% |
+## Models
 
-**Highlights**
-- Excellent overall performance (Accuracy > 94%)  
-- **Random Forest** and **KNN** were top traditional models  
+### 1. Classical Machine Learning
 
----
+The following models are evaluated:
 
-### 3. **Deep Neural Network (DNN) with SMOTE & Stratified K-Fold**
-- **SMOTE** used for synthetic oversampling of minority (fraudulent) class  
-- **Stratified K-Fold Cross-Validation** ensures balanced splits  
-- Custom architecture tuned for text classification
+* K-Nearest Neighbors (KNN)
+* Random Forest
+* Decision Tree
+* Support Vector Machine (SVM)
+* Naive Bayes
+* Multilayer Perceptron (MLP)
 
-**Results (Average across folds)**
-- Accuracy: **77.38%**  
-- Precision: **15.61%**  
-- Recall: **83.25%**  
+The experiments compare:
 
-> Despite lower accuracy, the **DNN achieved the highest recall**, making it the most effective at identifying *fraudulent* posts — a critical goal in job scam detection.
+* Original class distribution
+* Class-weighted training
+* SMOTE oversampling
 
----
+### 2. GloVe + Sequential Neural Network
 
-## Evaluation Metrics
-- Accuracy  
-- Precision, Recall, F1-Score  
-- ROC-AUC  
-- Confusion Matrix  
-- Cross-validation averages  
+A text-based neural network is trained using job-posting text.
 
----
+**Pipeline:**
 
-## Technologies Used
-- **Python**, **TensorFlow/Keras**, **Scikit-learn**, **NLTK**  
-- **GloVe embeddings** for semantic representation  
-- **SMOTE**, **Stratified K-Fold** for data balancing and reliability  
-- **Matplotlib**, **Seaborn** for visualization 
+Text → Tokenization → Padding → GloVe Embeddings → Neural Network → Fraud Probability
+
+Configuration:
+
+* GloVe: **100-dimensional pretrained embeddings**
+* Vocabulary size: **20,000**
+* Maximum sequence length: **200**
+* Binary classification
+* TensorFlow/Keras
+
+### 3. DNN with SMOTE and Stratified K-Fold
+
+A neural-network approach is evaluated using:
+
+* **SMOTE** for minority-class oversampling
+* **Stratified K-Fold Cross-Validation**
+* Fraud-focused evaluation using precision, recall, and F1-score
+
+## Results
+
+### Classical ML — Original Class Distribution
+
+| Model             |   Accuracy |  Precision | Recall |         F1 |
+| ----------------- | ---------: | ---------: | -----: | ---------: |
+| KNN               |     96.09% |     76.19% | 27.75% |     40.68% |
+| **Random Forest** | **96.90%** | **76.72%** | 51.45% | **61.59%** |
+| Decision Tree     |     95.67% |     55.17% | 55.49% |     55.33% |
+| SVM               |     95.16% |      0.00% |  0.00% |      0.00% |
+| Naive Bayes       |     87.47% |     21.17% | 58.38% |     31.08% |
+| MLP               |     94.63% |     42.28% | 30.06% |     35.14% |
+
+### GloVe Sequential Neural Network
+
+| Metric               | Result |
+| -------------------- | -----: |
+| Test Loss            | 0.1727 |
+| Test Accuracy        | 93.60% |
+| Test AUC             | 90.20% |
+| Fraudulent Precision |    40% |
+| Fraudulent Recall    |    68% |
+| Fraudulent F1        |    51% |
+
+## Evaluation
+
+The models are evaluated using:
+
+* Accuracy
+* Precision
+* Recall
+* F1-score
+* ROC-AUC
+* Confusion Matrix
+* Stratified Cross-Validation
+
+Because fraudulent postings represent only **4.84%** of the dataset, fraudulent-class **recall and F1-score** are considered alongside overall accuracy.
+
+## Tech Stack
+
+* **Python**
+* **TensorFlow / Keras**
+* **Scikit-learn**
+* **imbalanced-learn**
+* **NLTK**
+* **GloVe**
+* **Pandas**
+* **NumPy**
+* **Matplotlib**
+* **Seaborn**
+* **WordCloud**
+* **Joblib**
